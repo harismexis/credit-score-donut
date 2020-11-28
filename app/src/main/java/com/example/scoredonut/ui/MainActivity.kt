@@ -1,52 +1,78 @@
 package com.example.scoredonut.ui
 
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.scoredonut.R
-import com.example.scoredonut.util.NetworkConnectionListener
+import com.example.scoredonut.databinding.ActivityMainBinding
+import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), NetworkConnectionListener.NetworkConnectionClient {
+class MainActivity : AppCompatActivity(),
+    MainViewModel.CreditResponseCallback {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: MainViewModel
-    private var networkListener: NetworkConnectionListener? = null
+
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
-        networkListener = NetworkConnectionListener(this)
+        initialiseViewBinding()
+        setContentView(binding.root)
+        initialiseViewModel()
     }
 
     override fun onResume() {
         super.onResume()
-        networkListener?.startListen()
+        viewModel.startMonitor()
     }
 
     override fun onPause() {
         super.onPause()
-        networkListener?.stopListen()
+        viewModel.stopMonitor()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        networkListener = null
+    override fun onCreditSuccess(uiModel: CreditUiModel) {
+        updateCreditScoreView(uiModel)
     }
 
-    override fun onNetworkConnectionAvailable() {
-        //
+    override fun onCreditError(error: Throwable) {
+        Toast.makeText(
+            this,
+            error.message,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
-    override fun onNetworkConnectionLost() {
-        //
+    private fun initialiseViewBinding() {
+        binding = ActivityMainBinding.inflate(layoutInflater)
     }
+
+    private fun initialiseViewModel() {
+        viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
+        viewModel.setCreditResponseCallback(this)
+    }
+
+    private fun updateCreditScoreView(uiModel: CreditUiModel) {
+        val donutView = binding.donutView
+        donutView.progressBar.max = uiModel.maxScoreValue
+        donutView.progressBar.progress = uiModel.score
+        donutView.txtCredit.text = uiModel.score.toString()
+        donutView.txtFooter.text = getString(
+            R.string.credit_score_footer,
+            uiModel.maxScoreValue.toString()
+        )
+        donutView.root.visibility = View.VISIBLE
+    }
+
 
 }

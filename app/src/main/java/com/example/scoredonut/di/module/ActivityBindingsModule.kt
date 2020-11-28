@@ -1,4 +1,4 @@
-package com.example.scoredonut.di
+package com.example.scoredonut.di.module
 
 import com.example.scoredonut.ui.MainActivity
 import dagger.Module

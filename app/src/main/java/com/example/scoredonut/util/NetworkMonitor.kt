@@ -6,12 +6,17 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class NetworkConnectionListener(
-    private var client: NetworkConnectionClient
+@Singleton
+class NetworkMonitor @Inject constructor(
+    var appContext: Context
 ) : NetworkCallback() {
 
-    interface NetworkConnectionClient {
+    private var client: NetworkMonitorClient? = null
+
+    interface NetworkMonitorClient {
         fun onNetworkConnectionAvailable()
         fun onNetworkConnectionLost()
     }
@@ -21,26 +26,29 @@ class NetworkConnectionListener(
         .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
         .build()
 
-    fun startListen() {
-        val connectivityManager = (client as Context)
+    fun startMonitor() {
+        val connectivityManager = appContext.applicationContext
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.registerNetworkCallback(networkRequest, this)
     }
 
-    fun stopListen() {
-        val connectivityManager = (client as Context)
+    fun stopMonitor() {
+        val connectivityManager = appContext.applicationContext
             .getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         connectivityManager.unregisterNetworkCallback(this)
     }
 
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
-        client.onNetworkConnectionAvailable()
+        client?.onNetworkConnectionAvailable()
     }
 
     override fun onLost(network: Network) {
         super.onLost(network)
-        client.onNetworkConnectionLost()
+        client?.onNetworkConnectionLost()
     }
 
+    fun setClient(client: NetworkMonitorClient) {
+        this.client = client
+    }
 }

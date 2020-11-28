@@ -1,7 +1,7 @@
 package com.example.scoredonut.model
 
 data class CreditReportInfo(
-    var score: Float?,
-    var maxScoreValue: Float?
+    var score: Int?,
+    var maxScoreValue: Int?
 )
 

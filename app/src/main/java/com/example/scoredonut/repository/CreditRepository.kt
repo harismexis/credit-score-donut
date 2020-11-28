@@ -8,11 +8,13 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class CreditRepository @Inject constructor() {
 
     companion object {
-        const val CREDIT_URL = "endpoint.json"
+        const val CREDIT_INFO_URL = "endpoint.json"
         const val BASE_URL = "https://android-interview.s3.eu-west-2.amazonaws.com/"
     }
 
@@ -41,7 +43,7 @@ class CreditRepository @Inject constructor() {
     }
 
     fun getCredit(): Single<CreditResponse?> {
-        return creditApi.getCreditInfo(CREDIT_URL)
+        return creditApi.getCreditInfo(CREDIT_INFO_URL)
     }
 
 }

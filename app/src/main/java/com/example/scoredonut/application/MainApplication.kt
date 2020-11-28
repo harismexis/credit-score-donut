@@ -1,7 +1,8 @@
 package com.example.scoredonut.application
 
-import com.example.scoredonut.di.DaggerMainComponent
-import com.example.scoredonut.di.MainComponent
+import com.example.scoredonut.di.component.DaggerMainComponent
+import com.example.scoredonut.di.component.MainComponent
+import com.example.scoredonut.di.module.ApplicationModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -26,7 +27,10 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        mainComponent = DaggerMainComponent.builder().build()
+        mainComponent = DaggerMainComponent
+            .builder()
+            .applicationModule(ApplicationModule(this))
+            .build()
         mainComponent.inject(this)
         return mainComponent
     }
