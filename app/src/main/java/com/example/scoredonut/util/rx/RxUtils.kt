@@ -1,5 +1,6 @@
-package com.example.scoredonut.util
+package com.example.scoredonut.util.rx
 
+import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
@@ -9,14 +10,6 @@ fun <T> setSchedulersSingle(provider: BaseSchedulerProvider): SingleTransformer<
     return SingleTransformer { upstream: Single<T> ->
         upstream
             .subscribeOn(provider.io())
-            .observeOn(provider.ui())
-    }
-}
-
-fun <T> setUISchedulersSingle(provider: BaseSchedulerProvider): SingleTransformer<T, T> {
-    return SingleTransformer { upstream: Single<T> ->
-        upstream
-            .subscribeOn(provider.ui())
             .observeOn(provider.ui())
     }
 }

@@ -4,9 +4,9 @@ import com.example.scoredonut.interfaces.CreditScoreCallback
 import com.example.scoredonut.model.CreditReportInfo
 import com.example.scoredonut.model.CreditScoreResponse
 import com.example.scoredonut.repository.CreditRepository
-import com.example.scoredonut.util.ConnectivityMonitor
-import com.example.scoredonut.util.ConnectivityState
-import com.example.scoredonut.util.TrampolineSchedulerProvider
+import com.example.scoredonut.util.network.ConnectivityMonitor
+import com.example.scoredonut.util.network.ConnectivityState
+import com.example.scoredonut.util.rx.schedulers.TrampolineSchedulerProvider
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins

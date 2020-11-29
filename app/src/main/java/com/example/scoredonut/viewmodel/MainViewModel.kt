@@ -7,10 +7,10 @@ import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.interfaces.CreditScoreCallback
 import com.example.scoredonut.model.CreditScoreResponse
 import com.example.scoredonut.repository.CreditRepository
-import com.example.scoredonut.util.BaseSchedulerProvider
-import com.example.scoredonut.util.ConnectivityMonitor
-import com.example.scoredonut.util.ConnectivityState
-import com.example.scoredonut.util.setSchedulersSingle
+import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
+import com.example.scoredonut.util.network.ConnectivityMonitor
+import com.example.scoredonut.util.network.ConnectivityState
+import com.example.scoredonut.util.rx.setSchedulersSingle
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable

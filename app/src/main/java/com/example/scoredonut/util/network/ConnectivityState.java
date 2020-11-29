@@ -1,4 +1,4 @@
-package com.example.scoredonut.util;
+package com.example.scoredonut.util.network;
 
 public enum ConnectivityState {
         DISCONNECTED,

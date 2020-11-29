@@ -1,7 +1,7 @@
 package com.example.scoredonut.viewmodel
 
 import com.example.scoredonut.extensions.toUiModel
-import com.example.scoredonut.util.ConnectivityState
+import com.example.scoredonut.util.network.ConnectivityState
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before

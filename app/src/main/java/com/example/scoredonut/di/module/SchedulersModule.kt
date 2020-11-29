@@ -1,8 +1,8 @@
 package com.example.scoredonut.di.module
 
 import androidx.annotation.NonNull
-import com.example.scoredonut.util.BaseSchedulerProvider
-import com.example.scoredonut.util.SchedulerProvider
+import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
+import com.example.scoredonut.util.rx.schedulers.SchedulerProvider
 import dagger.Module
 import dagger.Provides
 
