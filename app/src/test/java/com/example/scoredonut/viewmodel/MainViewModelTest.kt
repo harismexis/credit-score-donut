@@ -1,113 +1,112 @@
 package com.example.scoredonut.viewmodel
 
 import com.example.scoredonut.extensions.toUiModel
-import com.example.scoredonut.model.CreditReportInfo
-import com.example.scoredonut.model.CreditResponse
-import com.example.scoredonut.repository.CreditRepository
-import com.example.scoredonut.util.NetworkMonitor
-import com.example.scoredonut.util.TrampolineSchedulerProvider
-import com.example.scoredonut.viewmodel.MainViewModel.CreditResponseCallback
+import com.example.scoredonut.util.ConnectivityState
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
-import io.reactivex.Single
-import io.reactivex.plugins.RxJavaPlugins
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.times
+import org.mockito.Mockito
+import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
 @RunWith(JUnit4::class)
-class MainViewModelTest {
-
-    @Mock
-    lateinit var mockCreditRepository: CreditRepository
-
-    @Mock
-    lateinit var mockNetworkMonitor: NetworkMonitor
-
-    @Mock
-    lateinit var mockCreditCallback: CreditResponseCallback
-
-    private var fakeCreditResponse: CreditResponse? = null
-
-    private var testSchedulerProvider = TrampolineSchedulerProvider()
-
-    private lateinit var mainViewModel: MainViewModel
+class MainViewModelTest : MainViewModelTestSetup() {
 
     @Before
     fun setup() {
         MockitoAnnotations.initMocks(this)
-        initFakes()
         setupMocks()
         initClassUnderTest()
         initRxErrorHandler()
     }
 
-    private fun initClassUnderTest() {
-        mainViewModel =
-            MainViewModel(mockCreditRepository, testSchedulerProvider, mockNetworkMonitor)
-        mainViewModel.setCreditResponseCallback(mockCreditCallback)
-    }
-
-    private fun initFakes() {
-        fakeCreditResponse = CreditResponse(CreditReportInfo(300, 500))
-    }
-
-    private fun setupMocks() {
-        `when`(mockCreditRepository.getCredit()).thenReturn(
-            Single.just(fakeCreditResponse)
-        )
-    }
-
-    private fun initRxErrorHandler() {
-        RxJavaPlugins.setErrorHandler { ex: Throwable ->
-
-        }
-    }
-
     @Test
     fun networkIsOnAndCreditResponseIsValid_networkCallDoneAndSuccessCallbackCalled() {
         // when
-        mainViewModel.onNetworkConnectionAvailable()
+        triggerCreditScoreRequest()
 
         // then
-        verify(mockCreditRepository, times(1)).getCredit()
-        verify(mockCreditCallback, times(1)).onCreditSuccess(fakeCreditResponse.toUiModel()!!)
+        verify(mockCreditRepository, times(1)).getCreditScore()
+        verify(mockCallback, times(1)).onCreditScoreSuccess(mockResponse.toUiModel()!!)
+        verify(mockCallback, never()).onCreditScoreError(com.nhaarman.mockitokotlin2.any())
+        Assert.assertEquals(SCORE, mockResponse.toUiModel()!!.score)
+        Assert.assertEquals(MAX_SCORE, mockResponse.toUiModel()!!.maxScoreValue)
     }
 
-//    @Test
-//    fun networkIsOnAndCreditResponseIsNull_networkCallDoneAndErrorCallbackCalled() {
-//        // given
-////        `when`(mockCreditRepository.getCredit()).thenReturn(
-////            Single.just(null)
-////        )
-//
-//        // when
-//        mainViewModel.onNetworkConnectionAvailable()
-//
-//        // then
-//        verify(mockCreditRepository, times(1)).getCredit()
-//        verify(mockCreditCallback, times(1))
-//            .onCreditError(Throwable(NULL_DATA))
-//    }
-
-
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun networkIsOnAndCreditCallThrowsError_onErrorCallbackCalledWithThrownError() {
         // given
         val error = IllegalStateException("Illegal State Exception")
-        `when`(mockCreditRepository.getCredit()).thenThrow(error)
-
+        `when`(mockCreditRepository.getCreditScore()).thenThrow(error)
 
         // when
-        mainViewModel.onNetworkConnectionAvailable()
+        triggerCreditScoreRequest()
 
         // then
-        verify(mockCreditRepository, times(1)).getCredit()
-        verify(mockCreditCallback, times(1)).onCreditError(error)
+        verifyNetworkCallDoneAndOnSuccessNeverCalled()
+        verify(mockCallback, times(1)).onCreditScoreError(error)
+    }
+
+    @Test
+    fun networkIsOnAndResponseHasNoReportInfo_onErrorCallbackCalledWithError() {
+        // given
+        `when`(mockResponse.creditReportInfo).thenReturn(null)
+
+        // when
+        triggerCreditScoreRequest()
+
+        // then
+        verifyNetworkCallDoneAndOnSuccessNeverCalled()
+
+        val captor = argumentCaptor<Throwable>()
+        verify(mockCallback).onCreditScoreError(captor.capture())
+        assert(captor.firstValue.message == "Null creditReportInfo")
+    }
+
+    @Test
+    fun networkIsOnAndResponseHasNoScore_onErrorCallbackCalledWithError() {
+        // given
+        `when`(mockCreditInfo.score).thenReturn(null)
+
+        // when
+        triggerCreditScoreRequest()
+
+        // then
+        verifyNetworkCallDoneAndOnSuccessNeverCalled()
+        verifyErrorCallbackCalledWithError("Null score")
+    }
+
+    @Test
+    fun networkIsOnAndResponseHasNoMaxScore_onErrorCallbackCalledWithError() {
+        // given
+        `when`(mockCreditInfo.maxScoreValue).thenReturn(null)
+
+        // when
+        triggerCreditScoreRequest()
+
+        // then
+        verifyNetworkCallDoneAndOnSuccessNeverCalled()
+        verifyErrorCallbackCalledWithError("Null maxScoreValue")
+    }
+
+    private fun verifyErrorCallbackCalledWithError(errorMsg: String) {
+        val captor = argumentCaptor<Throwable>()
+        verify(mockCallback).onCreditScoreError(captor.capture())
+        assert(captor.firstValue.message == errorMsg)
+    }
+
+    private fun triggerCreditScoreRequest() {
+        mainViewModel.bind()
+        connectivityUpdates.accept(ConnectivityState.CONNECTED)
+    }
+
+    private fun verifyNetworkCallDoneAndOnSuccessNeverCalled() {
+        verify(mockCreditRepository, Mockito.times(1)).getCreditScore()
+        verify(mockCallback, Mockito.never()).onCreditScoreSuccess(com.nhaarman.mockitokotlin2.any())
     }
 
 }

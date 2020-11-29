@@ -1,7 +1,7 @@
 package com.example.scoredonut.repository
 
 import com.example.scoredonut.api.CreditApi
-import com.example.scoredonut.model.CreditResponse
+import com.example.scoredonut.model.CreditScoreResponse
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -14,7 +14,7 @@ import javax.inject.Singleton
 class CreditRepository @Inject constructor() {
 
     companion object {
-        const val CREDIT_INFO_URL = "endpoint.json"
+        const val CREDIT_SCORE_URL = "endpoint.json"
         const val BASE_URL = "https://android-interview.s3.eu-west-2.amazonaws.com/"
     }
 
@@ -42,8 +42,9 @@ class CreditRepository @Inject constructor() {
             .build()
     }
 
-    fun getCredit(): Single<CreditResponse?> {
-        return creditApi.getCreditInfo(CREDIT_INFO_URL)
+    fun getCreditScore(): Single<CreditScoreResponse?> {
+        //throw IllegalStateException()
+        return creditApi.getCreditScore(CREDIT_SCORE_URL)
     }
 
 }

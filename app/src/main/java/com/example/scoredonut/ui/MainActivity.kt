@@ -8,13 +8,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.scoredonut.R
 import com.example.scoredonut.databinding.ActivityMainBinding
+import com.example.scoredonut.interfaces.CreditScoreCallback
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(),
-    MainViewModel.CreditResponseCallback {
+class MainActivity : AppCompatActivity(), CreditScoreCallback {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -33,19 +33,19 @@ class MainActivity : AppCompatActivity(),
 
     override fun onResume() {
         super.onResume()
-        viewModel.startMonitor()
+        viewModel.bind()
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.stopMonitor()
+        viewModel.unbind()
     }
 
-    override fun onCreditSuccess(uiModel: CreditUiModel) {
+    override fun onCreditScoreSuccess(uiModel: CreditUiModel) {
         updateCreditScoreView(uiModel)
     }
 
-    override fun onCreditError(error: Throwable) {
+    override fun onCreditScoreError(error: Throwable) {
         Toast.makeText(
             this,
             error.message,
@@ -73,6 +73,5 @@ class MainActivity : AppCompatActivity(),
         )
         donutView.root.visibility = View.VISIBLE
     }
-
 
 }

@@ -6,20 +6,17 @@ import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
+import com.jakewharton.rxrelay2.PublishRelay
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NetworkMonitor @Inject constructor(
+class ConnectivityMonitor @Inject constructor(
     var appContext: Context
 ) : NetworkCallback() {
 
-    private var client: NetworkMonitorClient? = null
-
-    interface NetworkMonitorClient {
-        fun onNetworkConnectionAvailable()
-        fun onNetworkConnectionLost()
-    }
+    private val connectivityUpdates: PublishRelay<ConnectivityState> =
+        PublishRelay.create()
 
     private val networkRequest: NetworkRequest = NetworkRequest.Builder()
         .addTransportType(NetworkCapabilities.TRANSPORT_WIFI)
@@ -40,15 +37,16 @@ class NetworkMonitor @Inject constructor(
 
     override fun onAvailable(network: Network) {
         super.onAvailable(network)
-        client?.onNetworkConnectionAvailable()
+        connectivityUpdates.accept(ConnectivityState.CONNECTED)
     }
 
     override fun onLost(network: Network) {
         super.onLost(network)
-        client?.onNetworkConnectionLost()
+        connectivityUpdates.accept(ConnectivityState.DISCONNECTED)
     }
 
-    fun setClient(client: NetworkMonitorClient) {
-        this.client = client
+    fun getConnectivityUpdates(): PublishRelay<ConnectivityState> {
+        return connectivityUpdates
     }
+
 }

@@ -33,6 +33,7 @@ buildscript {
         def rxandroid = '2.1.1'
         def cardview = '1.0.0'
         def GLIDE = '4.11.0'
+        def RX_RELAY = '2.1.1'
 
         libraries = [
                 "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin",
@@ -106,7 +107,8 @@ buildscript {
         rxJavaDependencies = [
                 "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_adapter_rxjava2",
                 "io.reactivex.rxjava2:rxjava:$rxjava2",
-                "io.reactivex.rxjava2:rxandroid:$rxandroid"
+                "io.reactivex.rxjava2:rxandroid:$rxandroid",
+                "com.jakewharton.rxrelay2:rxrelay:${RX_RELAY}",
         ]
 
         glideDependencies = [

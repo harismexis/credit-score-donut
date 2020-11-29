@@ -13,6 +13,14 @@ fun <T> setSchedulersSingle(provider: BaseSchedulerProvider): SingleTransformer<
     }
 }
 
+fun <T> setUISchedulersSingle(provider: BaseSchedulerProvider): SingleTransformer<T, T> {
+    return SingleTransformer { upstream: Single<T> ->
+        upstream
+            .subscribeOn(provider.ui())
+            .observeOn(provider.ui())
+    }
+}
+
 fun <T> setSchedulersObservable(provider: BaseSchedulerProvider): ObservableTransformer<T, T> {
     return ObservableTransformer { observable: Observable<T> ->
         observable

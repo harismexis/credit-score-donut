@@ -4,84 +4,67 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.scoredonut.extensions.getErrorMessage
 import com.example.scoredonut.extensions.toUiModel
-import com.example.scoredonut.model.CreditResponse
-import com.example.scoredonut.model.CreditUiModel
+import com.example.scoredonut.interfaces.CreditScoreCallback
+import com.example.scoredonut.model.CreditScoreResponse
 import com.example.scoredonut.repository.CreditRepository
 import com.example.scoredonut.util.BaseSchedulerProvider
-import com.example.scoredonut.util.NetworkMonitor
+import com.example.scoredonut.util.ConnectivityMonitor
+import com.example.scoredonut.util.ConnectivityState
 import com.example.scoredonut.util.setSchedulersSingle
+import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     var creditRepository: CreditRepository,
     var schedulerProvider: BaseSchedulerProvider,
-    var networkMonitor: NetworkMonitor
-) : ViewModel(), NetworkMonitor.NetworkMonitorClient {
+    var connectivity: ConnectivityMonitor
+) : ViewModel() {
 
-    companion object {
-        const val NULL_DATA = "Null data"
-    }
-
-    private var creditCallback: CreditResponseCallback? = null
-
-    interface CreditResponseCallback {
-        fun onCreditSuccess(uiModel: CreditUiModel)
-        fun onCreditError(error: Throwable)
-    }
-
+    private var creditScoreCallback: CreditScoreCallback? = null
     private var disposables: CompositeDisposable = CompositeDisposable()
-
     private val TAG = MainViewModel::class.qualifiedName
-
-    init {
-        networkMonitor.setClient(this)
-    }
-
-    private fun fetchCreditInfo() {
-        disposables.add(creditRepository.getCredit()
-            .compose(setSchedulersSingle(schedulerProvider))
-            .doOnSuccess {
-                onCreditInfoReceived(it)
-            }
-            .doOnError {
-                Log.d(TAG, it.getErrorMessage())
-                creditCallback?.onCreditError(it)
-            }.subscribe()
-        )
-    }
-
-    private fun onCreditInfoReceived(response: CreditResponse?) {
-        response.toUiModel()?.also {
-            creditCallback?.onCreditSuccess(it)
-        } ?: run {
-            creditCallback?.onCreditError(Throwable(NULL_DATA))
-        }
-    }
-
-    fun startMonitor() {
-        networkMonitor.startMonitor()
-    }
-
-    fun stopMonitor() {
-        networkMonitor.stopMonitor()
-    }
 
     override fun onCleared() {
         super.onCleared()
+        unbind()
+    }
+
+    fun bind() {
+        disposables = CompositeDisposable()
+        disposables.addAll(getConnectivityUpdates())
+        connectivity.startMonitor()
+    }
+
+    fun unbind() {
         disposables.dispose()
-        stopMonitor()
+        connectivity.stopMonitor()
     }
 
-    override fun onNetworkConnectionAvailable() {
-        fetchCreditInfo()
+    fun setCreditResponseCallback(callback: CreditScoreCallback) {
+        this.creditScoreCallback = callback
     }
 
-    override fun onNetworkConnectionLost() {
-        // do nothing
+    private fun getConnectivityUpdates(): Disposable {
+        return connectivity.getConnectivityUpdates()
+            .filter { it == ConnectivityState.CONNECTED }
+            .flatMapSingle { getCreditScore() }
+            .doOnError {
+                Log.d(TAG, it.getErrorMessage())
+                creditScoreCallback?.onCreditScoreError(it)
+            }
+            .subscribe()
     }
 
-    fun setCreditResponseCallback(callback: CreditResponseCallback) {
-        this.creditCallback = callback
+    private fun getCreditScore(): Single<CreditScoreResponse?> {
+        return creditRepository.getCreditScore()
+            .compose(setSchedulersSingle(schedulerProvider))
+            .doOnSuccess {
+                it.toUiModel()?.let { uiModel ->
+                    creditScoreCallback?.onCreditScoreSuccess(uiModel)
+                }
+            }
     }
+
 }
