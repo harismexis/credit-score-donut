@@ -43,7 +43,6 @@ class CreditRepository @Inject constructor() {
     }
 
     fun getCreditScore(): Single<CreditScoreResponse?> {
-        //throw IllegalStateException()
         return creditApi.getCreditScore(CREDIT_SCORE_URL)
     }
 

@@ -5,6 +5,12 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">@dimen/base_text_size</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="ScoreTextView" parent="BaseTextView">
+        <item name="android:textSize">@dimen/score_text_size</item>
+        <item name="android:textColor">@color/yellow</item>
     </style>
 
 </resources>

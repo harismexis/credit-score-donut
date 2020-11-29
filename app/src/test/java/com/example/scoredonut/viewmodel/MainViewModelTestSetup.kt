@@ -10,12 +10,9 @@ import com.example.scoredonut.util.TrampolineSchedulerProvider
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
-@RunWith(JUnit4::class)
 open class MainViewModelTestSetup {
 
     companion object {

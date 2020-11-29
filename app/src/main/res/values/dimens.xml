@@ -4,5 +4,6 @@
     <dimen name="donut_view_border_size">220dp</dimen>
     <dimen name="donut_view_progress_size">218dp</dimen>
     <dimen name="base_text_size">18sp</dimen>
+    <dimen name="score_text_size">24sp</dimen>
 
 </resources>

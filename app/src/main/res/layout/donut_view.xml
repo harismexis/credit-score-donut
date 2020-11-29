@@ -46,9 +46,7 @@
 
         <TextView
             android:id="@+id/txtCredit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24sp" />
+            style="@style/ScoreTextView" />
 
         <TextView
             android:id="@+id/txtFooter"

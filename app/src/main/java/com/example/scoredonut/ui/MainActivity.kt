@@ -45,10 +45,10 @@ class MainActivity : AppCompatActivity(), CreditScoreCallback {
         updateCreditScoreView(uiModel)
     }
 
-    override fun onCreditScoreError(error: Throwable) {
+    override fun onCreditScoreError() {
         Toast.makeText(
             this,
-            error.message,
+            "Error occurred",
             Toast.LENGTH_LONG
         ).show()
     }

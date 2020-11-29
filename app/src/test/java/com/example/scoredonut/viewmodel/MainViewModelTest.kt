@@ -2,14 +2,12 @@ package com.example.scoredonut.viewmodel
 
 import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.util.ConnectivityState
-import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
 
@@ -31,10 +29,10 @@ class MainViewModelTest : MainViewModelTestSetup() {
 
         // then
         verify(mockCreditRepository, times(1)).getCreditScore()
-        verify(mockCallback, times(1)).onCreditScoreSuccess(mockResponse.toUiModel()!!)
-        verify(mockCallback, never()).onCreditScoreError(com.nhaarman.mockitokotlin2.any())
-        Assert.assertEquals(SCORE, mockResponse.toUiModel()!!.score)
-        Assert.assertEquals(MAX_SCORE, mockResponse.toUiModel()!!.maxScoreValue)
+        verify(mockCallback, times(1)).onCreditScoreSuccess(mockResponse.toUiModel())
+        verify(mockCallback, never()).onCreditScoreError()
+        Assert.assertEquals(SCORE, mockResponse.toUiModel().score)
+        Assert.assertEquals(MAX_SCORE, mockResponse.toUiModel().maxScoreValue)
     }
 
     @Test
@@ -47,8 +45,7 @@ class MainViewModelTest : MainViewModelTestSetup() {
         triggerCreditScoreRequest()
 
         // then
-        verifyNetworkCallDoneAndOnSuccessNeverCalled()
-        verify(mockCallback, times(1)).onCreditScoreError(error)
+        verifyNetworkCallTriggeredErrorCallback()
     }
 
     @Test
@@ -60,11 +57,7 @@ class MainViewModelTest : MainViewModelTestSetup() {
         triggerCreditScoreRequest()
 
         // then
-        verifyNetworkCallDoneAndOnSuccessNeverCalled()
-
-        val captor = argumentCaptor<Throwable>()
-        verify(mockCallback).onCreditScoreError(captor.capture())
-        assert(captor.firstValue.message == "Null creditReportInfo")
+        verifyNetworkCallTriggeredErrorCallback()
     }
 
     @Test
@@ -76,8 +69,7 @@ class MainViewModelTest : MainViewModelTestSetup() {
         triggerCreditScoreRequest()
 
         // then
-        verifyNetworkCallDoneAndOnSuccessNeverCalled()
-        verifyErrorCallbackCalledWithError("Null score")
+        verifyNetworkCallTriggeredErrorCallback()
     }
 
     @Test
@@ -89,14 +81,7 @@ class MainViewModelTest : MainViewModelTestSetup() {
         triggerCreditScoreRequest()
 
         // then
-        verifyNetworkCallDoneAndOnSuccessNeverCalled()
-        verifyErrorCallbackCalledWithError("Null maxScoreValue")
-    }
-
-    private fun verifyErrorCallbackCalledWithError(errorMsg: String) {
-        val captor = argumentCaptor<Throwable>()
-        verify(mockCallback).onCreditScoreError(captor.capture())
-        assert(captor.firstValue.message == errorMsg)
+        verifyNetworkCallTriggeredErrorCallback()
     }
 
     private fun triggerCreditScoreRequest() {
@@ -104,9 +89,10 @@ class MainViewModelTest : MainViewModelTestSetup() {
         connectivityUpdates.accept(ConnectivityState.CONNECTED)
     }
 
-    private fun verifyNetworkCallDoneAndOnSuccessNeverCalled() {
-        verify(mockCreditRepository, Mockito.times(1)).getCreditScore()
-        verify(mockCallback, Mockito.never()).onCreditScoreSuccess(com.nhaarman.mockitokotlin2.any())
+    private fun verifyNetworkCallTriggeredErrorCallback() {
+        verify(mockCreditRepository, times(1)).getCreditScore()
+        verify(mockCallback, never()).onCreditScoreSuccess(com.nhaarman.mockitokotlin2.any())
+        verify(mockCallback).onCreditScoreError()
     }
 
 }

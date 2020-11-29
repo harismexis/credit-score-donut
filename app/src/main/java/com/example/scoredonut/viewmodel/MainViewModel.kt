@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(
             .flatMapSingle { getCreditScore() }
             .doOnError {
                 Log.d(TAG, it.getErrorMessage())
-                creditScoreCallback?.onCreditScoreError(it)
+                creditScoreCallback?.onCreditScoreError()
             }
             .subscribe()
     }
