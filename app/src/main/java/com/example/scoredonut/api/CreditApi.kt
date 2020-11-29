@@ -7,9 +7,9 @@ import retrofit2.http.Path
 
 interface CreditApi {
 
-    @GET("{credit}")
+    @GET("{creditEndpoint}")
     fun getCreditScore(
-        @Path("credit") credit: String,
+        @Path("creditEndpoint") creditEndpoint: String,
     ): Single<CreditScoreResponse?>
 
 }
