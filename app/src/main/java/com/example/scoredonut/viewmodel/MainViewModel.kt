@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     var creditRepository: CreditRepository,
-    var connectivity: ConnectivityMonitor
+    var connectivity: ConnectivityMonitor,
 ) : ViewModel() {
 
     private var disposables: CompositeDisposable = CompositeDisposable()

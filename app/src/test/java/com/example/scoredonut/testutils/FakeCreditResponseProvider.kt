@@ -1,4 +1,4 @@
-package com.example.scoredonut.utils
+package com.example.scoredonut.testutils
 
 import com.example.scoredonut.model.CreditResponse
 import com.google.gson.Gson

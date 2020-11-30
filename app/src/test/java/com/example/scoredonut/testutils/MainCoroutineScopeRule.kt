@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.scoredonut.utils
+package com.example.scoredonut.testutils
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

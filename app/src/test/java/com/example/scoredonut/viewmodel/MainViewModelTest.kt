@@ -3,11 +3,11 @@ package com.example.scoredonut.viewmodel
 import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.model.CreditResponse
 import com.example.scoredonut.model.CreditUiModel
+import com.example.scoredonut.testutils.getFakeCreditResponseNoCreditReportInfo
+import com.example.scoredonut.testutils.getFakeCreditResponseNoMaxScore
+import com.example.scoredonut.testutils.getFakeCreditResponseNoScore
+import com.example.scoredonut.testutils.getFakeCreditResponseValid
 import com.example.scoredonut.util.network.ConnectivityState
-import com.example.scoredonut.utils.getFakeCreditResponseNoCreditReportInfo
-import com.example.scoredonut.utils.getFakeCreditResponseNoMaxScore
-import com.example.scoredonut.utils.getFakeCreditResponseNoScore
-import com.example.scoredonut.utils.getFakeCreditResponseValid
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import kotlinx.coroutines.runBlocking

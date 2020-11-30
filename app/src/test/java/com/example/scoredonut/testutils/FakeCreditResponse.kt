@@ -1,4 +1,4 @@
-package com.example.scoredonut.utils
+package com.example.scoredonut.testutils
 
 fun getCreditResponseValid(): String {
     return "{\n" +

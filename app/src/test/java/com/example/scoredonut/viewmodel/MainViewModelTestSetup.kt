@@ -6,9 +6,9 @@ import com.example.scoredonut.model.CreditReportInfo
 import com.example.scoredonut.model.CreditResponse
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.repository.CreditRepository
+import com.example.scoredonut.testutils.MainCoroutineScopeRule
 import com.example.scoredonut.util.network.ConnectivityMonitor
 import com.example.scoredonut.util.network.ConnectivityState
-import com.example.scoredonut.utils.MainCoroutineScopeRule
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.plugins.RxJavaPlugins
 import kotlinx.coroutines.ExperimentalCoroutinesApi

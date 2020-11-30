@@ -2,10 +2,10 @@ package com.example.scoredonut.extensions
 
 import com.example.scoredonut.model.CreditReportInfo
 import com.example.scoredonut.model.CreditResponse
-import com.example.scoredonut.utils.getFakeCreditResponseNoCreditReportInfo
-import com.example.scoredonut.utils.getFakeCreditResponseNoMaxScore
-import com.example.scoredonut.utils.getFakeCreditResponseNoScore
-import com.example.scoredonut.utils.getFakeCreditResponseValid
+import com.example.scoredonut.testutils.getFakeCreditResponseNoCreditReportInfo
+import com.example.scoredonut.testutils.getFakeCreditResponseNoMaxScore
+import com.example.scoredonut.testutils.getFakeCreditResponseNoScore
+import com.example.scoredonut.testutils.getFakeCreditResponseValid
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
