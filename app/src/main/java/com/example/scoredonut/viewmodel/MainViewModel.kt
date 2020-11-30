@@ -7,9 +7,9 @@ import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.interfaces.CreditScoreCallback
 import com.example.scoredonut.model.CreditScoreResponse
 import com.example.scoredonut.repository.CreditRepository
-import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
 import com.example.scoredonut.util.network.ConnectivityMonitor
 import com.example.scoredonut.util.network.ConnectivityState
+import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
 import com.example.scoredonut.util.rx.setSchedulersSingle
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
@@ -61,7 +61,7 @@ class MainViewModel @Inject constructor(
         return creditRepository.getCreditScore()
             .compose(setSchedulersSingle(schedulerProvider))
             .doOnSuccess {
-                it.toUiModel()?.let { uiModel ->
+                it.toUiModel().let { uiModel ->
                     creditScoreCallback?.onCreditScoreSuccess(uiModel)
                 }
             }

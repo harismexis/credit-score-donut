@@ -6,6 +6,7 @@ allprojects {
 }
 
 buildscript {
+
     ext {
         kotlin = '1.4.20'
         def androidx_test = '1.2.0'
@@ -32,91 +33,95 @@ buildscript {
         def rxjava2 = '2.2.12'
         def rxandroid = '2.1.1'
         def cardview = '1.0.0'
-        def GLIDE = '4.11.0'
-        def RX_RELAY = '2.1.1'
+        def glide = '4.11.0'
+        def rx_relay = '2.1.1'
+        def mockito = '3.3.0'
 
         libraries = [
-                "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin",
+                kotlin             : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin",
 
-                "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_android",
-                "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_android",
+                coroutines         : "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_android",
+                coroutines_android : "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_android",
 
-                "androidx.appcompat:appcompat:$appcompat",
-                "com.google.android.material:material:$material",
-                "androidx.constraintlayout:constraintlayout:$constraint_layout",
-                "androidx.cardview:cardview:${cardview}",
+                appCompat          : "androidx.appcompat:appcompat:$appcompat",
+                material           : "com.google.android.material:material:$material",
+                constraint_layout  : "androidx.constraintlayout:constraintlayout:$constraint_layout",
+                cardview           : "androidx.cardview:cardview:${cardview}",
 
-                "androidx.lifecycle:lifecycle-extensions:$lifecycle",
-                "androidx.lifecycle:lifecycle-livedata-ktx:$livedata",
-                "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
+                extensions         : "androidx.lifecycle:lifecycle-extensions:$lifecycle",
+                livedata           : "androidx.lifecycle:lifecycle-livedata-ktx:$livedata",
+                viewmodel          : "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle",
 
-                "androidx.activity:activity-ktx:$activity_ktx",
-                "androidx.fragment:fragment-ktx:$fragment_ktx",
+                activity_ktx       : "androidx.activity:activity-ktx:$activity_ktx",
+                fragment_ktx       : "androidx.fragment:fragment-ktx:$fragment_ktx",
 
-                "androidx.room:room-ktx:$room",
+                room               : "androidx.room:room-ktx:$room",
 
-                "com.google.code.gson:gson:$gson",
-                "com.squareup.retrofit2:converter-gson:$retrofit_gson",
-                "com.squareup.retrofit2:retrofit:$retrofit"
+                gson               : "com.google.code.gson:gson:$gson",
+                retrofit_gson      : "com.squareup.retrofit2:converter-gson:$retrofit_gson",
+                retrofit           : "com.squareup.retrofit2:retrofit:$retrofit"
         ]
 
         librariesKapt = [
-                "androidx.room:room-compiler:$room"
+                room: "androidx.room:room-compiler:$room"
         ]
 
         librariesDebug = [
-                "com.google.truth:truth:$truth"
+                truth: "com.google.truth:truth:$truth"
         ]
 
         testLibraries = [
-                "androidx.test.ext:junit:$androidx_junit",
-
-                "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android",
-                "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin",
-                "androidx.arch.core:core-testing:$lifecycle"
+                junit          : "androidx.test.ext:junit:$androidx_junit",
+                coroutines_test: "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android",
+                mockito_kotlin : "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin",
+                core_testing   : "androidx.arch.core:core-testing:$lifecycle"
         ]
 
         androidTestLibraries = [
-                'androidx.test:core:1.0.0',
-                "androidx.test.ext:junit:$androidx_junit",
+                test_core       : "androidx.test:core:1.0.0",
+                junit           : "androidx.test.ext:junit:$androidx_junit",
 
-                "androidx.test:runner:$androidx_test",
-                "androidx.test:rules:$androidx_test",
+                runner          : "androidx.test:runner:$androidx_test",
+                rules           : "androidx.test:rules:$androidx_test",
 
-                "androidx.test.espresso:espresso-core:$espresso",
-                "androidx.test.espresso:espresso-contrib:$espresso",
-                "androidx.test.espresso:espresso-intents:$espresso",
+                espresso_core   : "androidx.test.espresso:espresso-core:$espresso",
+                espresso_contrib: "androidx.test.espresso:espresso-contrib:$espresso",
+                espresso_intents: "androidx.test.espresso:espresso-intents:$espresso",
 
-                "androidx.arch.core:core-testing:$lifecycle",
-                "androidx.work:work-testing:$work",
-                "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android"
+                arch_core       : "androidx.arch.core:core-testing:$lifecycle",
+                work_testing    : "androidx.work:work-testing:$work",
+                coroutines_test : "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_android",
+
+                mockito_android : "org.mockito:mockito-android:$mockito",
+                mockito_core    : "org.mockito:mockito-core:$mockito",
+                mockito_kotlin  : "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin"
         ]
 
         daggerDependancies = [
-                "com.google.dagger:dagger:$dagger_2",
-                "com.google.dagger:dagger-android:$dagger_2",
-                "com.google.dagger:dagger-android-support:$dagger_2"
+                dagger                : "com.google.dagger:dagger:$dagger_2",
+                dagger_android        : "com.google.dagger:dagger-android:$dagger_2",
+                dagger_android_support: "com.google.dagger:dagger-android-support:$dagger_2"
         ]
 
         annotationProcessorsDependencies = [
-                "com.google.dagger:dagger-compiler:$dagger_2",
-                "com.google.dagger:dagger-android-processor:$dagger_2",
-                "com.github.bumptech.glide:compiler:${GLIDE}",
+                dagger_compiler         : "com.google.dagger:dagger-compiler:$dagger_2",
+                dagger_android_processor: "com.google.dagger:dagger-android-processor:$dagger_2",
+                glide_compiler          : "com.github.bumptech.glide:compiler:${glide}",
         ]
 
         rxJavaDependencies = [
-                "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_adapter_rxjava2",
-                "io.reactivex.rxjava2:rxjava:$rxjava2",
-                "io.reactivex.rxjava2:rxandroid:$rxandroid",
-                "com.jakewharton.rxrelay2:rxrelay:${RX_RELAY}",
+                retrofit_adapter: "com.squareup.retrofit2:adapter-rxjava2:$retrofit2_adapter_rxjava2",
+                rxjava          : "io.reactivex.rxjava2:rxjava:$rxjava2",
+                rxandroid       : "io.reactivex.rxjava2:rxandroid:$rxandroid",
+                rxrelay         : "com.jakewharton.rxrelay2:rxrelay:${rx_relay}",
         ]
 
         glideDependencies = [
-                "com.github.bumptech.glide:glide:${GLIDE}",
-                "com.github.bumptech.glide:okhttp3-integration:${GLIDE}"
+                glide       : "com.github.bumptech.glide:glide:${glide}",
+                glide_okhttp: "com.github.bumptech.glide:okhttp3-integration:${glide}"
         ]
 
-    }
+}
 
     repositories {
         google()

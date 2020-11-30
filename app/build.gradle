@@ -1,7 +1,6 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    // id 'kotlin-android-extensions'
     id 'kotlin-kapt'
 }
 
@@ -45,13 +44,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation libraries
-    implementation daggerDependancies
-    implementation rxJavaDependencies
-    kapt librariesKapt
-    kapt annotationProcessorsDependencies
-    debugImplementation librariesDebug
-    testImplementation testLibraries
-    androidTestImplementation androidTestLibraries
-    api glideDependencies
+    implementation libraries.values()
+    implementation daggerDependancies.values()
+    implementation rxJavaDependencies.values()
+    kapt librariesKapt.values()
+    kapt annotationProcessorsDependencies.values()
+    debugImplementation librariesDebug.values()
+    testImplementation testLibraries.values()
+    androidTestImplementation androidTestLibraries.values()
+    api glideDependencies.values()
 }
