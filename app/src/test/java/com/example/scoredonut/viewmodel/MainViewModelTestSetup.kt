@@ -1,19 +1,28 @@
 package com.example.scoredonut.viewmodel
 
-import com.example.scoredonut.interfaces.CreditScoreCallback
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.example.scoredonut.model.CreditReportInfo
-import com.example.scoredonut.model.CreditScoreResponse
+import com.example.scoredonut.model.CreditResponse
 import com.example.scoredonut.repository.CreditRepository
 import com.example.scoredonut.util.network.ConnectivityMonitor
 import com.example.scoredonut.util.network.ConnectivityState
-import com.example.scoredonut.util.rx.schedulers.TrampolineSchedulerProvider
+import com.example.scoredonut.utils.MainCoroutineScopeRule
 import com.jakewharton.rxrelay2.PublishRelay
-import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import org.junit.Rule
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
 open class MainViewModelTestSetup {
+
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @ExperimentalCoroutinesApi
+    @get:Rule
+    val coroutineScope = MainCoroutineScopeRule()
 
     companion object {
         const val SCORE = 500
@@ -27,15 +36,10 @@ open class MainViewModelTestSetup {
     protected lateinit var mockConnectivityMonitor: ConnectivityMonitor
 
     @Mock
-    protected lateinit var mockCallback: CreditScoreCallback
-
-    @Mock
-    protected lateinit var mockResponse: CreditScoreResponse
+    protected lateinit var mockResponse: CreditResponse
 
     @Mock
     protected lateinit var mockCreditInfo: CreditReportInfo
-
-    protected  var testSchedulerProvider = TrampolineSchedulerProvider()
 
     protected  lateinit var mainViewModel: MainViewModel
 
@@ -43,9 +47,7 @@ open class MainViewModelTestSetup {
         PublishRelay.create()
 
     protected fun initClassUnderTest() {
-        mainViewModel =
-            MainViewModel(mockCreditRepository, testSchedulerProvider, mockConnectivityMonitor)
-        mainViewModel.setCreditResponseCallback(mockCallback)
+        mainViewModel = MainViewModel(mockCreditRepository, mockConnectivityMonitor)
     }
 
     protected fun setupMocks() {
@@ -61,9 +63,9 @@ open class MainViewModelTestSetup {
     }
 
     protected fun setupMockCreditScoreRepository() {
-        `when`(mockCreditRepository.getCreditScore()).thenReturn(
-            Single.just(mockResponse)
-        )
+        runBlocking {
+        `when`(mockCreditRepository.getCreditScore()).thenReturn(mockResponse)
+        }
     }
 
     protected fun setupMockConnectivity() {

@@ -1,9 +1,9 @@
 package com.example.scoredonut.extensions
 
-import com.example.scoredonut.model.CreditScoreResponse
+import com.example.scoredonut.model.CreditResponse
 import com.example.scoredonut.model.CreditUiModel
 
-fun CreditScoreResponse?.toUiModel(): CreditUiModel {
+fun CreditResponse?.toUiModel(): CreditUiModel {
     this?.let {
         it.creditReportInfo?.let { info ->
             info.score?.let { score ->

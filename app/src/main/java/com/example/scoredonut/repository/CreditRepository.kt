@@ -1,8 +1,7 @@
 package com.example.scoredonut.repository
 
 import com.example.scoredonut.api.CreditApi
-import com.example.scoredonut.model.CreditScoreResponse
-import io.reactivex.Single
+import com.example.scoredonut.model.CreditResponse
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -42,7 +41,7 @@ class CreditRepository @Inject constructor() {
             .build()
     }
 
-    fun getCreditScore(): Single<CreditScoreResponse?> {
+    suspend fun getCreditScore(): CreditResponse? {
         return creditApi.getCreditScore(CREDIT_SCORE_URL)
     }
 

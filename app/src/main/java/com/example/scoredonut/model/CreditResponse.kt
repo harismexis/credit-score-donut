@@ -1,5 +1,5 @@
 package com.example.scoredonut.model
 
-data class CreditScoreResponse(
+data class CreditResponse(
     var creditReportInfo: CreditReportInfo?
 )

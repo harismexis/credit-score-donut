@@ -1,34 +1,39 @@
 package com.example.scoredonut.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.scoredonut.extensions.getErrorMessage
 import com.example.scoredonut.extensions.toUiModel
-import com.example.scoredonut.interfaces.CreditScoreCallback
-import com.example.scoredonut.model.CreditScoreResponse
+import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.repository.CreditRepository
 import com.example.scoredonut.util.network.ConnectivityMonitor
 import com.example.scoredonut.util.network.ConnectivityState
-import com.example.scoredonut.util.rx.schedulers.BaseSchedulerProvider
-import com.example.scoredonut.util.rx.setSchedulersSingle
-import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MainViewModel @Inject constructor(
     var creditRepository: CreditRepository,
-    var schedulerProvider: BaseSchedulerProvider,
     var connectivity: ConnectivityMonitor
 ) : ViewModel() {
 
-    private var creditScoreCallback: CreditScoreCallback? = null
     private var disposables: CompositeDisposable = CompositeDisposable()
     private val TAG = MainViewModel::class.qualifiedName
+    private var jobGetCredit: Job? = null
+
+    private val mUiModel = MutableLiveData<CreditUiModel>()
+    val uiModel: LiveData<CreditUiModel>
+        get() = mUiModel
 
     override fun onCleared() {
         super.onCleared()
-        unbind()
+        jobGetCredit?.cancel()
+        jobGetCredit = null
     }
 
     fun bind() {
@@ -42,29 +47,27 @@ class MainViewModel @Inject constructor(
         connectivity.stopMonitor()
     }
 
-    fun setCreditResponseCallback(callback: CreditScoreCallback) {
-        this.creditScoreCallback = callback
-    }
-
     private fun getConnectivityUpdates(): Disposable {
         return connectivity.getConnectivityUpdates()
             .filter { it == ConnectivityState.CONNECTED }
-            .flatMapSingle { getCreditScore() }
+            .doOnNext {
+                jobGetCredit = retrieveCreditScore()
+            }
             .doOnError {
                 Log.d(TAG, it.getErrorMessage())
-                creditScoreCallback?.onCreditScoreError()
             }
             .subscribe()
     }
 
-    private fun getCreditScore(): Single<CreditScoreResponse?> {
-        return creditRepository.getCreditScore()
-            .compose(setSchedulersSingle(schedulerProvider))
-            .doOnSuccess {
-                it.toUiModel().let { uiModel ->
-                    creditScoreCallback?.onCreditScoreSuccess(uiModel)
-                }
+    private fun retrieveCreditScore(): Job {
+        return viewModelScope.launch {
+            try {
+                val response = creditRepository.getCreditScore()
+                mUiModel.value = response.toUiModel()
+            } catch (e: Exception) {
+                Log.d(TAG, e.getErrorMessage())
             }
+        }
     }
 
 }

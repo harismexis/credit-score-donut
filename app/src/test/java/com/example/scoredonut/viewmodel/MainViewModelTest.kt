@@ -3,12 +3,14 @@ package com.example.scoredonut.viewmodel
 import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.util.network.ConnectivityState
 import com.nhaarman.mockitokotlin2.verify
+import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.JUnit4
-import org.mockito.Mockito.*
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.times
 import org.mockito.MockitoAnnotations
 
 @RunWith(JUnit4::class)
@@ -28,9 +30,9 @@ class MainViewModelTest : MainViewModelTestSetup() {
         triggerCreditScoreRequest()
 
         // then
-        verify(mockCreditRepository, times(1)).getCreditScore()
-        verify(mockCallback, times(1)).onCreditScoreSuccess(mockResponse.toUiModel())
-        verify(mockCallback, never()).onCreditScoreError()
+        runBlocking {
+            verify(mockCreditRepository, times(1)).getCreditScore()
+        }
         Assert.assertEquals(SCORE, mockResponse.toUiModel().score)
         Assert.assertEquals(MAX_SCORE, mockResponse.toUiModel().maxScoreValue)
     }
@@ -39,7 +41,9 @@ class MainViewModelTest : MainViewModelTestSetup() {
     fun networkIsOnAndCreditCallThrowsError_onErrorCallbackCalledWithThrownError() {
         // given
         val error = IllegalStateException("Illegal State Exception")
-        `when`(mockCreditRepository.getCreditScore()).thenThrow(error)
+        runBlocking {
+            `when`(mockCreditRepository.getCreditScore()).thenThrow(error)
+        }
 
         // when
         triggerCreditScoreRequest()
@@ -90,9 +94,9 @@ class MainViewModelTest : MainViewModelTestSetup() {
     }
 
     private fun verifyNetworkCallTriggeredErrorCallback() {
-        verify(mockCreditRepository, times(1)).getCreditScore()
-        verify(mockCallback, never()).onCreditScoreSuccess(com.nhaarman.mockitokotlin2.any())
-        verify(mockCallback).onCreditScoreError()
+        runBlocking {
+            verify(mockCreditRepository, times(1)).getCreditScore()
+        }
     }
 
 }

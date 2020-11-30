@@ -2,19 +2,17 @@ package com.example.scoredonut.ui
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.scoredonut.R
 import com.example.scoredonut.databinding.ActivityMainBinding
-import com.example.scoredonut.interfaces.CreditScoreCallback
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.android.AndroidInjection
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), CreditScoreCallback {
+class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -29,6 +27,7 @@ class MainActivity : AppCompatActivity(), CreditScoreCallback {
         initialiseViewBinding()
         setContentView(binding.root)
         initialiseViewModel()
+        observeLiveData()
     }
 
     override fun onResume() {
@@ -41,16 +40,10 @@ class MainActivity : AppCompatActivity(), CreditScoreCallback {
         viewModel.unbind()
     }
 
-    override fun onCreditScoreSuccess(uiModel: CreditUiModel) {
-        updateCreditScoreView(uiModel)
-    }
-
-    override fun onCreditScoreError() {
-        Toast.makeText(
-            this,
-            "Error occurred",
-            Toast.LENGTH_LONG
-        ).show()
+    private fun observeLiveData() {
+        viewModel.uiModel.observe(this, {
+            updateCreditScoreView(it)
+        })
     }
 
     private fun initialiseViewBinding() {
@@ -59,7 +52,6 @@ class MainActivity : AppCompatActivity(), CreditScoreCallback {
 
     private fun initialiseViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)[MainViewModel::class.java]
-        viewModel.setCreditResponseCallback(this)
     }
 
     private fun updateCreditScoreView(uiModel: CreditUiModel) {
@@ -72,6 +64,7 @@ class MainActivity : AppCompatActivity(), CreditScoreCallback {
             uiModel.maxScoreValue.toString()
         )
         donutView.root.visibility = View.VISIBLE
+        binding.progressBar.visibility = View.GONE
     }
 
 }

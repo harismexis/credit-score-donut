@@ -2,7 +2,7 @@ package com.example.extensions
 
 import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.model.CreditReportInfo
-import com.example.scoredonut.model.CreditScoreResponse
+import com.example.scoredonut.model.CreditResponse
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -20,7 +20,7 @@ class CreditResponseExtensionTest {
     fun responseHasAllData_uiModelHasExpectedData() {
         // given
         val info = CreditReportInfo(SCORE, MAX_SCORE)
-        val response = CreditScoreResponse(info)
+        val response = CreditResponse(info)
 
         // when
         val uiModel = response.toUiModel()
@@ -34,7 +34,7 @@ class CreditResponseExtensionTest {
     fun responseMissingScore_exceptionIsThrown() {
         // given
         val info = CreditReportInfo(null, MAX_SCORE)
-        val response = CreditScoreResponse(info)
+        val response = CreditResponse(info)
 
         // when
         response.toUiModel()
@@ -44,7 +44,7 @@ class CreditResponseExtensionTest {
     fun responseMissingMaxScore_exceptionIsThrown() {
         // given
         val info = CreditReportInfo(SCORE, null)
-        val response = CreditScoreResponse(info)
+        val response = CreditResponse(info)
 
         // when
         response.toUiModel()
@@ -54,7 +54,7 @@ class CreditResponseExtensionTest {
     fun responseMissingScoreValues_exceptionIsThrown() {
         // given
         val info = CreditReportInfo(null, null)
-        val response = CreditScoreResponse(info)
+        val response = CreditResponse(info)
 
         // when
         response.toUiModel()
@@ -63,7 +63,7 @@ class CreditResponseExtensionTest {
     @Test(expected = IllegalStateException::class)
     fun responseMissingReportInfo_exceptionIsThrown() {
         // given
-        val response = CreditScoreResponse(null)
+        val response = CreditResponse(null)
 
         // when
         response.toUiModel()
