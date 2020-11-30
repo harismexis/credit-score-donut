@@ -41,7 +41,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeLiveData() {
-        viewModel.uiModel.observe(this, {
+        viewModel.creditUiModel.observe(this, {
             updateCreditScoreView(it)
         })
     }

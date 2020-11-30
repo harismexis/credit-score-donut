@@ -1,8 +1,11 @@
-package com.example.extensions
+package com.example.scoredonut.extensions
 
-import com.example.scoredonut.extensions.toUiModel
 import com.example.scoredonut.model.CreditReportInfo
 import com.example.scoredonut.model.CreditResponse
+import com.example.scoredonut.utils.getFakeCreditResponseNoCreditReportInfo
+import com.example.scoredonut.utils.getFakeCreditResponseNoMaxScore
+import com.example.scoredonut.utils.getFakeCreditResponseNoScore
+import com.example.scoredonut.utils.getFakeCreditResponseValid
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -12,28 +15,43 @@ import org.junit.runners.JUnit4
 class CreditResponseExtensionTest {
 
     companion object {
-        const val SCORE = 300
-        const val MAX_SCORE = 500
+        const val FAKE_SCORE = 300
+        const val FAKE_MAX_SCORE = 500
+        const val FAKE_SCORE_IN_FAKE_RESPONSE = 327
+        const val FAKE_MAX_SCORE_IN_FAKE_RESPONSE = 700
     }
 
     @Test
     fun responseHasAllData_uiModelHasExpectedData() {
         // given
-        val info = CreditReportInfo(SCORE, MAX_SCORE)
+        val info = CreditReportInfo(FAKE_SCORE, FAKE_MAX_SCORE)
         val response = CreditResponse(info)
 
         // when
         val uiModel = response.toUiModel()
 
         // then
-        Assert.assertEquals(SCORE, uiModel.score)
-        Assert.assertEquals(MAX_SCORE, uiModel.maxScoreValue)
+        Assert.assertEquals(FAKE_SCORE, uiModel.score)
+        Assert.assertEquals(FAKE_MAX_SCORE, uiModel.maxScoreValue)
+    }
+
+    @Test
+    fun responseFromStringHasAllData_uiModelHasExpectedData() {
+        // given
+        val response = getFakeCreditResponseValid()
+
+        // when
+        val uiModel = response.toUiModel()
+
+        // then
+        Assert.assertEquals(FAKE_SCORE_IN_FAKE_RESPONSE, uiModel.score)
+        Assert.assertEquals(FAKE_MAX_SCORE_IN_FAKE_RESPONSE, uiModel.maxScoreValue)
     }
 
     @Test(expected = IllegalStateException::class)
-    fun responseMissingScore_exceptionIsThrown() {
+    fun responseHasNullScore_conversionToUiModelThrowsException() {
         // given
-        val info = CreditReportInfo(null, MAX_SCORE)
+        val info = CreditReportInfo(null, FAKE_MAX_SCORE)
         val response = CreditResponse(info)
 
         // when
@@ -41,9 +59,18 @@ class CreditResponseExtensionTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun responseMissingMaxScore_exceptionIsThrown() {
+    fun responseFromStringHasNoScore_conversionToUiModelThrowsException() {
         // given
-        val info = CreditReportInfo(SCORE, null)
+        val response = getFakeCreditResponseNoScore()
+
+        // when
+        response.toUiModel()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun responseHasNullMaxScore_conversionToUiModelThrowsException() {
+        // given
+        val info = CreditReportInfo(FAKE_SCORE, null)
         val response = CreditResponse(info)
 
         // when
@@ -51,7 +78,16 @@ class CreditResponseExtensionTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun responseMissingScoreValues_exceptionIsThrown() {
+    fun responseFromStringHasNoMaxScore_conversionToUiModelThrowsException() {
+        // given
+        val response = getFakeCreditResponseNoMaxScore()
+
+        // when
+        response.toUiModel()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun responseHasNullValues_conversionToUiModelThrowsException() {
         // given
         val info = CreditReportInfo(null, null)
         val response = CreditResponse(info)
@@ -61,7 +97,7 @@ class CreditResponseExtensionTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun responseMissingReportInfo_exceptionIsThrown() {
+    fun responseHasNullCreditReportInfo_conversionToUiModelThrowsException() {
         // given
         val response = CreditResponse(null)
 
@@ -70,7 +106,16 @@ class CreditResponseExtensionTest {
     }
 
     @Test(expected = IllegalStateException::class)
-    fun responseIsNull_exceptionIsThrown() {
+    fun responseFromStringHasNoCreditReportInfo_conversionToUiModelThrowsException() {
+        // given
+        val response = getFakeCreditResponseNoCreditReportInfo()
+
+        // when
+        response.toUiModel()
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun responseIsNull_conversionToUiModelThrowsException() {
         // given
         val response = null
 

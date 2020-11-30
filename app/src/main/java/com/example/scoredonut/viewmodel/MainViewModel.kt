@@ -26,9 +26,9 @@ class MainViewModel @Inject constructor(
     private val TAG = MainViewModel::class.qualifiedName
     private var jobGetCredit: Job? = null
 
-    private val mUiModel = MutableLiveData<CreditUiModel>()
-    val uiModel: LiveData<CreditUiModel>
-        get() = mUiModel
+    private val mCreditUiModel = MutableLiveData<CreditUiModel>()
+    val creditUiModel: LiveData<CreditUiModel>
+        get() = mCreditUiModel
 
     override fun onCleared() {
         super.onCleared()
@@ -63,7 +63,7 @@ class MainViewModel @Inject constructor(
         return viewModelScope.launch {
             try {
                 val response = creditRepository.getCreditScore()
-                mUiModel.value = response.toUiModel()
+                mCreditUiModel.value = response.toUiModel()
             } catch (e: Exception) {
                 Log.d(TAG, e.getErrorMessage())
             }

@@ -3,7 +3,6 @@ package com.example.scoredonut.di.component
 import com.example.scoredonut.application.MainApplication
 import com.example.scoredonut.di.module.ActivityBindingsModule
 import com.example.scoredonut.di.module.ApplicationModule
-import com.example.scoredonut.di.module.SchedulersModule
 import com.example.scoredonut.viewmodel.factory.ViewModelModule
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -16,8 +15,7 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ActivityBindingsModule::class,
         ViewModelModule::class,
-        ApplicationModule::class,
-        SchedulersModule::class]
+        ApplicationModule::class]
 )
 interface MainComponent : AndroidInjector<MainApplication> {
 
