@@ -23,4 +23,4 @@ network responses from real JSON data have been used in the Tests.
 
 &nbsp;
 
-![Alt text](app_screenshot.png?raw=true "app screenshot"){:height="50%" width="50%"}
+![Alt text](app_screenshot.png?raw=true "app screenshot")
