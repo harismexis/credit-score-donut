@@ -1,8 +1,8 @@
 ### Overview:
 
 The project is written in Kotlin and uses MVVM Architecture (Model - View - ViewModel).
-Some popular Frameworks have been used i.e. Android JetPack Components (LiveData, ViewModel, Coroutines),
-RxJava, Retrofit, Dagger, Mockito etc
+Some popular Frameworks have been used i.e. Android JetPack (LiveData, ViewModel, Coroutines),
+RxJava, Retrofit, Dagger, Mockito etc.
 
 ### Description:
 
