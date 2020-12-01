@@ -14,8 +14,9 @@ a network call (using Coroutines) to fetch the credit score data from the given 
 used for creating the required API. If the response is retrieved successfully, it will be converted to a CreditUiModel
 and assigned to the exposed LiveData, so the Activity will be notified and use the UiModel to update the donut view.
 
-### Unit Tests:
+### Tests:
 
-The project contains UnitTests for testing the business logic of the application.
-Mockito has been used for mocking the dependencies of the classes under test and also
-some necessary utilities for setting up the tests with coroutines and live data.
+The project contains Unit Tests for testing the business logic of the application.
+The tests use Mockito for mocking the dependencies of the classes under test and also
+some utilities for setting up the tests with coroutines and live data. Also some fake
+network responses from real JSON data have been used in the Tests.
