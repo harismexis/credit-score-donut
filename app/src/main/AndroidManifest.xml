@@ -14,7 +14,9 @@
         android:name=".application.MainApplication"
         android:theme="@style/Theme.ScoreDonut">
 
-        <activity android:name=".ui.MainActivity">
+        <activity
+            android:name=".ui.MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
