@@ -22,6 +22,5 @@ some utilities for setting up the tests with coroutines and live data. Also some
 network responses from real JSON data have been used in the Tests.
 
 &nbsp;
-&nbsp;
 
 ![Alt text](app_screenshot.png?raw=true "app screenshot")
