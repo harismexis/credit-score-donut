@@ -1,12 +1,15 @@
 package com.example.scoredonut.ui
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.example.scoredonut.R
 import com.example.scoredonut.databinding.ActivityMainBinding
+import com.example.scoredonut.databinding.DonutViewBinding
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.android.AndroidInjection
@@ -18,8 +21,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelProvider.Factory
 
     private lateinit var viewModel: MainViewModel
-
     private lateinit var binding: ActivityMainBinding
+    private lateinit var donutBinding: DonutViewBinding
+
+    private var handler = Handler(Looper.getMainLooper())
+    private var animationThread: Thread? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -38,6 +44,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.unbind()
+        animationThread?.interrupt()
     }
 
     private fun observeLiveData() {
@@ -48,6 +55,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initialiseViewBinding() {
         binding = ActivityMainBinding.inflate(layoutInflater)
+        donutBinding = binding.donutView
     }
 
     private fun initialiseViewModel() {
@@ -55,16 +63,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateCreditScoreView(uiModel: CreditUiModel) {
-        val donutView = binding.donutView
-        donutView.progressBar.max = uiModel.maxScoreValue
-        donutView.progressBar.progress = uiModel.score
-        donutView.txtCredit.text = uiModel.score.toString()
-        donutView.txtFooter.text = getString(
+        donutBinding.progressBar.max = uiModel.maxScoreValue
+        donutBinding.txtFooter.text = getString(
             R.string.credit_score_footer,
             uiModel.maxScoreValue.toString()
         )
-        donutView.root.visibility = View.VISIBLE
+        donutBinding.root.visibility = View.VISIBLE
         binding.progressBar.visibility = View.GONE
+        animateScore(uiModel.score)
+    }
+
+    private fun animateScore(userScore: Int) {
+        animationThread = Thread {
+            for (progress in 1..userScore) {
+                handler.post {
+                    donutBinding.progressBar.progress = progress
+                    donutBinding.txtCredit.text = progress.toString()
+                }
+                try {
+                    Thread.sleep(5)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+            }
+        }.apply { start() }
     }
 
 }
