@@ -15,7 +15,7 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
-    private lateinit var mainComponent: MainComponent
+     private lateinit var mainComponent: MainComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -34,6 +34,10 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
         mainComponent.inject(this)
         return mainComponent
     }
+
+//    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+//        return DaggerMainComponent.builder().application(this).build()
+//    }
 
     private fun initRxErrorHandler() {
         RxJavaPlugins.setErrorHandler { ex: Throwable ->

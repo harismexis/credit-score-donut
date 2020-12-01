@@ -47,10 +47,14 @@ dependencies {
     implementation libraries.values()
     implementation daggerDependancies.values()
     implementation rxJavaDependencies.values()
+
     kapt librariesKapt.values()
     kapt annotationProcessorsDependencies.values()
+
     debugImplementation librariesDebug.values()
+
     testImplementation testLibraries.values()
     androidTestImplementation androidTestLibraries.values()
+
     api glideDependencies.values()
 }
