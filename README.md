@@ -21,7 +21,7 @@ The tests use Mockito for mocking the dependencies of the classes under test and
 some utilities for setting up the tests with coroutines and live data. Also some fake
 network responses from real JSON data have been used in the Tests.
 
-&NewLine;
-&NewLine;
+`(space)`(space)(space)
+`(space)`(space)(space)
 
 ![Alt text](app_screenshot.png?raw=true "app screenshot")
