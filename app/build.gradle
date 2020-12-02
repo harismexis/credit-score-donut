@@ -14,8 +14,13 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.example.scoredonut.runner.InstrumentedRunner"
+        // testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
+//    packagingOptions {
+//        exclude 'META-INF/services/javax.annotation.processing.Processor'
+//    }
 
     buildTypes {
         release {
@@ -40,21 +45,30 @@ android {
     testOptions {
         unitTests.returnDefaultValues = true
     }
+
+//    kapt {
+//        generateStubs = true
+//    }
 }
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
     implementation libraries.values()
     implementation daggerDependancies.values()
     implementation rxJavaDependencies.values()
 
+    debugImplementation librariesDebug.values()
+
+    api glideDependencies.values()
+
     kapt librariesKapt.values()
     kapt annotationProcessorsDependencies.values()
 
-    debugImplementation librariesDebug.values()
-
     testImplementation testLibraries.values()
+
     androidTestImplementation androidTestLibraries.values()
 
-    api glideDependencies.values()
+    kaptAndroidTest annotationProcessorsDependencies.dagger_compiler
+    kaptAndroidTest  annotationProcessorsDependencies.dagger_android_processor
 }

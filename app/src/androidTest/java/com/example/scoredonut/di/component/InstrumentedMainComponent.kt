@@ -1,8 +1,7 @@
 package com.example.scoredonut.di.component
 
-import com.example.scoredonut.application.MainApplication
+import com.example.scoredonut.application.InstrumentedMainApplication
 import com.example.scoredonut.di.module.ActivityBindingsModule
-import com.example.scoredonut.di.module.ApplicationModule
 import com.example.scoredonut.viewmodel.factory.ViewModelModule
 import dagger.BindsInstance
 import dagger.Component
@@ -13,13 +12,14 @@ import javax.inject.Singleton
 @Singleton
 @Component(
     modules = [
-        AndroidSupportInjectionModule::class,
-        ActivityBindingsModule::class
-         , ViewModelModule::class
-        , ApplicationModule::class
+         AndroidSupportInjectionModule::class,
+         ActivityBindingsModule::class
+        , ViewModelModule::class
+        , InstrumentedApplicationModule::class
+        //, ApplicationModule::class
     ]
 )
-interface MainComponent : AndroidInjector<MainApplication> {
+interface InstrumentedMainComponent : AndroidInjector<InstrumentedMainApplication> {
 
 //    @Component.Builder
 //    interface Builder {
@@ -27,19 +27,17 @@ interface MainComponent : AndroidInjector<MainApplication> {
 //        /**
 //         * [BindsInstance] annotation is used for, if you want to bind particular object or instance
 //         * of an object through the time of component construction
-//         *
-//         * @BindsInstance replaces Builder appModule(AppModule appModule)
-//         * And removes Constructor with Application AppModule(Application)
 //         */
-//        @BindsInstance
-//        fun application(application: MainApplication) : Builder
+////        @BindsInstance
+////        fun application(application: InstrumentedMainApplication) : Builder
 //
-//        fun build() : MainComponent
+//        fun build() : InstrumentedMainComponent
 //    }
 
     @Component.Factory
     interface Factory {
-        fun create(@BindsInstance application: MainApplication) : MainComponent
+        fun create(@BindsInstance application: InstrumentedMainApplication) : InstrumentedMainComponent
     }
+
 
 }

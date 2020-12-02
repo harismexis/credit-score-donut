@@ -28,7 +28,7 @@ buildscript {
         def work = '2.2.0'
         def truth = '1.0'
         def mockito_kotlin = '2.2.0'
-        def dagger_2 = '2.29.1'
+        def dagger_2 = '2.30.1'
         def retrofit2_adapter_rxjava2 = '2.6.0'
         def rxjava2 = '2.2.12'
         def rxandroid = '2.1.1'
@@ -94,7 +94,6 @@ buildscript {
 
                 mockito_android : "org.mockito:mockito-android:$mockito",
                 mockito_core    : "org.mockito:mockito-core:$mockito",
-                mockito_kotlin  : "com.nhaarman.mockitokotlin2:mockito-kotlin:$mockito_kotlin"
         ]
 
         daggerDependancies = [

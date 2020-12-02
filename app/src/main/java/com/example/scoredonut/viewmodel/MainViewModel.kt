@@ -16,8 +16,11 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class MainViewModel @Inject constructor(
+@Singleton
+class MainViewModel @Inject constructor
+    (
     var creditRepository: CreditRepository,
     var connectivity: ConnectivityMonitor,
 ) : ViewModel() {

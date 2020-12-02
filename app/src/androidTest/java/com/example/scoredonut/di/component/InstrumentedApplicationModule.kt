@@ -1,12 +1,12 @@
-package com.example.scoredonut.di.module
+package com.example.scoredonut.di.component
 
 import android.content.Context
-import com.example.scoredonut.application.MainApplication
+import com.example.scoredonut.application.InstrumentedMainApplication
 import dagger.Module
 import dagger.Provides
 
 @Module
-class ApplicationModule {
+class InstrumentedApplicationModule {
 
 //    //@Provides
 //    fun provideApplication(): Application {
@@ -14,7 +14,7 @@ class ApplicationModule {
 //    }
 
     @Provides
-    fun providesContext(application: MainApplication): Context {
+    fun providesContext(application: InstrumentedMainApplication): Context {
         return application.applicationContext
     }
 
