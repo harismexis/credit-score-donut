@@ -9,7 +9,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ConnectivityMonitor @Inject constructor(
+class ConnectivityMonitor @Inject constructor (
     var appContext: Context,
     var requestProvider: ConnectivityRequestProvider
 ) : NetworkCallback() {

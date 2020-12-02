@@ -2,7 +2,6 @@ package com.example.scoredonut.application
 
 import com.example.scoredonut.di.component.DaggerMainComponent
 import com.example.scoredonut.di.component.MainComponent
-import com.example.scoredonut.di.module.ApplicationModule
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -15,7 +14,7 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
     @Inject
     lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
 
-     private lateinit var mainComponent: MainComponent
+    private lateinit var mainComponent: MainComponent
 
     override fun onCreate() {
         super.onCreate()
@@ -26,18 +25,20 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
         return dispatchingAndroidInjector
     }
 
+//    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
+//        mainComponent = DaggerMainComponent
+//            .builder()
+//            .application(this)
+//            .build()
+//        mainComponent.inject(this)
+//        return mainComponent
+//    }
+
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        mainComponent = DaggerMainComponent
-            .builder()
-            .applicationModule(ApplicationModule(this))
-            .build()
+        mainComponent = DaggerMainComponent.factory().create(this)
         mainComponent.inject(this)
         return mainComponent
     }
-
-//    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-//        return DaggerMainComponent.builder().application(this).build()
-//    }
 
     private fun initRxErrorHandler() {
         RxJavaPlugins.setErrorHandler { ex: Throwable ->
