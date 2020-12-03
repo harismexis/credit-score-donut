@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/scoreProgressBar"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="@dimen/donut_view_progress_size"
         android:layout_height="@dimen/donut_view_progress_size"
@@ -33,10 +33,10 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="@id/progressBar"
-        app:layout_constraintEnd_toEndOf="@id/progressBar"
-        app:layout_constraintStart_toStartOf="@id/progressBar"
-        app:layout_constraintTop_toTopOf="@id/progressBar">
+        app:layout_constraintBottom_toBottomOf="@id/scoreProgressBar"
+        app:layout_constraintEnd_toEndOf="@id/scoreProgressBar"
+        app:layout_constraintStart_toStartOf="@id/scoreProgressBar"
+        app:layout_constraintTop_toTopOf="@id/scoreProgressBar">
 
         <TextView
             android:id="@+id/txtHeader"

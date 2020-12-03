@@ -63,13 +63,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateCreditScoreView(uiModel: CreditUiModel) {
-        donutBinding.progressBar.max = uiModel.maxScoreValue
+        donutBinding.scoreProgressBar.max = uiModel.maxScoreValue
         donutBinding.txtFooter.text = getString(
             R.string.credit_score_footer,
             uiModel.maxScoreValue.toString()
         )
         donutBinding.root.visibility = View.VISIBLE
-        binding.progressBar.visibility = View.GONE
+        binding.loadingProgressBar.visibility = View.GONE
         animateScore(uiModel.score)
     }
 
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
         animationThread = Thread {
             for (progress in 1..userScore) {
                 handler.post {
-                    donutBinding.progressBar.progress = progress
+                    donutBinding.scoreProgressBar.progress = progress
                     donutBinding.txtCredit.text = progress.toString()
                 }
                 try {

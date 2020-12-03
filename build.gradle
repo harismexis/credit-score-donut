@@ -36,6 +36,8 @@ buildscript {
         def glide = '4.11.0'
         def rx_relay = '2.1.1'
         def mockito = '3.3.0'
+        def mockk = '1.10.3-jdk8'
+        def mockk_android = '1.10.3-jdk8'
 
         libraries = [
                 kotlin             : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin",
@@ -68,6 +70,11 @@ buildscript {
 
         librariesDebug = [
                 truth: "com.google.truth:truth:$truth"
+        ]
+
+        mockkDependencies = [
+                mockk         : "io.mockk:mockk:$mockk",
+                mockk_android : "io.mockk:mockk-android:$mockk_android"
         ]
 
         testLibraries = [

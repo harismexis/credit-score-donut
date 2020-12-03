@@ -1,4 +1,4 @@
-package com.example.scoredonut.di.component
+package com.example.scoredonut.di.module
 
 import android.content.Context
 import com.example.scoredonut.application.InstrumentedMainApplication
@@ -7,11 +7,6 @@ import dagger.Provides
 
 @Module
 class InstrumentedApplicationModule {
-
-//    //@Provides
-//    fun provideApplication(): Application {
-//        return application
-//    }
 
     @Provides
     fun providesContext(application: InstrumentedMainApplication): Context {

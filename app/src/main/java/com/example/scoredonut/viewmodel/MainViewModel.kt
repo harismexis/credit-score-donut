@@ -19,7 +19,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class MainViewModel @Inject constructor
+open class MainViewModel @Inject constructor
     (
     var creditRepository: CreditRepository,
     var connectivity: ConnectivityMonitor,
