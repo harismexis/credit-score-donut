@@ -15,6 +15,7 @@ import com.example.scoredonut.util.getString
 import com.example.scoredonut.util.getStringFormatted
 import com.example.scoredonut.viewmodel.MainViewModel
 import io.mockk.every
+import io.mockk.justRun
 import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import org.hamcrest.core.IsNot
@@ -27,8 +28,8 @@ import org.junit.runner.RunWith
 class MainActivityTest {
 
     companion object {
-        const val SCORE = 80
-        const val MAX_SCORE = 300
+        const val SCORE = 2
+        const val MAX_SCORE = 10
     }
 
     @get:Rule
@@ -43,6 +44,8 @@ class MainActivityTest {
     @Before
     fun setup() {
         mockViewModel = MockProvider.provideMockViewModel()
+        justRun { mockViewModel.bind() }
+        justRun { mockViewModel.unbind() }
     }
 
     @Test
