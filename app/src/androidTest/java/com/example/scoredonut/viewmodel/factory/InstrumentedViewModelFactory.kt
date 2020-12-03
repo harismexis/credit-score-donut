@@ -2,7 +2,7 @@ package com.example.scoredonut.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.scoredonut.mocks.MockMainViewModelProvider
+import com.example.scoredonut.mocks.MockProvider
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.Binds
 import dagger.MapKey
@@ -17,7 +17,7 @@ class InstrumentedViewModelFactory @Inject constructor(
     val viewModel: MainViewModel
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel?> create(modelClass: Class<T>) =
-        MockMainViewModelProvider.mockViewModel as T
+        MockProvider.provideMockViewModel() as T
 }
 
 @Target(

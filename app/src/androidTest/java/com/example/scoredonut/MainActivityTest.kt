@@ -1,16 +1,24 @@
 package com.example.scoredonut
 
+import android.widget.ProgressBar
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
-import com.example.scoredonut.mocks.MockMainViewModelProvider
+import com.example.scoredonut.mocks.MockProvider
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.ui.MainActivity
+import com.example.scoredonut.util.getString
+import com.example.scoredonut.util.getStringFormatted
+import com.example.scoredonut.viewmodel.MainViewModel
+import io.mockk.every
 import io.mockk.verify
+import junit.framework.Assert.assertEquals
 import org.hamcrest.core.IsNot
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -24,30 +32,51 @@ class MainActivityTest {
     }
 
     @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @get:Rule
     val testRule: ActivityTestRule<MainActivity> =
-        ActivityTestRule(MainActivity::class.java, false, true)
+        ActivityTestRule(MainActivity::class.java, false, false)
+
+    lateinit var mockViewModel: MainViewModel
+
+    @Before
+    fun setup() {
+        mockViewModel = MockProvider.provideMockViewModel()
+    }
 
     @Test
     fun viewModelUpdatesLiveData_UiIsUpdatedWithCreditScoreData() {
-        val expectedHeaderText = testRule.activity.getString(R.string.credit_score_header)
-        val expectedScoreText = SCORE.toString()
-        val expectedFooterText = testRule.activity.getString(R.string.credit_score_footer, MAX_SCORE)
+        // given
+        val expectedHeader = getString(R.string.credit_score_header)
+        val expectedScore = SCORE.toString()
+        val expectedFooter = getStringFormatted(R.string.credit_score_footer, MAX_SCORE.toString())
+        every { mockViewModel.creditUiModel } returns MockProvider.uiModel
 
-        // when
+        testRule.launchActivity(null)
         testRule.activity.runOnUiThread {
-            MockMainViewModelProvider.mCreditUiModel.value = CreditUiModel(SCORE, MAX_SCORE)
+            // when
+            MockProvider.mUiModel.value = CreditUiModel(SCORE, MAX_SCORE)
         }
 
         // then
         onView(withId(R.id.loadingProgressBar)).check(matches(IsNot(isDisplayed())))
         onView(withId(R.id.donutView)).check(matches(isDisplayed()))
-        onView(withId(R.id.txtHeader)).check(matches(withText(expectedHeaderText)))
-        onView(withId(R.id.txtCredit)).check(matches(withText(expectedScoreText)))
-        onView(withId(R.id.txtFooter)).check(matches(withText(expectedFooterText)))
+        onView(withId(R.id.txtHeader)).check(matches(withText(expectedHeader)))
+        onView(withId(R.id.txtCredit)).check(matches(withText(expectedScore)))
+        onView(withId(R.id.txtFooter)).check(matches(withText(expectedFooter)))
+        val scoreProgressBar = testRule.activity.findViewById<ProgressBar>(R.id.scoreProgressBar)
+        assertEquals(MAX_SCORE, scoreProgressBar.max)
     }
 
     @Test
     fun viewModelDoesNotUpdateLiveData_loadingProgressBarIsShownAndDonutIsGone() {
+        // given
+        every { mockViewModel.creditUiModel } returns MockProvider.emptyUiModel
+
+        // when
+        testRule.launchActivity(null)
+
         // then
         onView(withId(R.id.loadingProgressBar)).check(matches((isDisplayed())))
         onView(withId(R.id.donutView)).check(matches(IsNot(isDisplayed())))
@@ -58,11 +87,17 @@ class MainActivityTest {
 
     @Test
     fun activityPauses_activityUnbindsViewModel() {
+        // given
+        every { mockViewModel.creditUiModel } returns MockProvider.emptyUiModel
+
+        testRule.launchActivity(null)
         testRule.activity.runOnUiThread {
+            // when
             InstrumentationRegistry.getInstrumentation().callActivityOnPause(testRule.activity)
-            verify { MockMainViewModelProvider.mockViewModel.unbind() }
+
+            // then
+            verify { mockViewModel.unbind() }
         }
     }
-
 
 }
