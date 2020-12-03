@@ -73,7 +73,7 @@ class MainActivityTest {
     }
 
     @Test
-    fun viewModelDoesNotUpdateLiveData_loadingProgressBarIsShownAndDonutIsGone() {
+    fun viewModelDoesNotUpdateLiveData_loadingProgressShownAndDonutGone() {
         // given
         every { mockViewModel.creditUiModel } returns MockProvider.emptyUiModel
 
@@ -89,17 +89,32 @@ class MainActivityTest {
     }
 
     @Test
-    fun activityPauses_activityUnbindsViewModel() {
+    fun activityPausesAndResumes_viewModelUnbindsAndBinds() {
         // given
         every { mockViewModel.creditUiModel } returns MockProvider.emptyUiModel
-
         testRule.launchActivity(null)
+
+        pauseActivityAndVerifyViewModelUnbinds()
+        resumeActivityAndVerifyViewModelBinds()
+    }
+
+    private fun pauseActivityAndVerifyViewModelUnbinds() {
         testRule.activity.runOnUiThread {
             // when
             InstrumentationRegistry.getInstrumentation().callActivityOnPause(testRule.activity)
 
             // then
             verify { mockViewModel.unbind() }
+        }
+    }
+
+    private fun resumeActivityAndVerifyViewModelBinds() {
+        testRule.activity.runOnUiThread {
+            // when
+            InstrumentationRegistry.getInstrumentation().callActivityOnResume(testRule.activity)
+
+            // then
+            verify { mockViewModel.bind() }
         }
     }
 
