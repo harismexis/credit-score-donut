@@ -25,15 +25,6 @@ class MainApplication : DaggerApplication(), HasAndroidInjector {
         return dispatchingAndroidInjector
     }
 
-//    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-//        mainComponent = DaggerMainComponent
-//            .builder()
-//            //.application(this)
-//            .build()
-//        mainComponent.inject(this)
-//        return mainComponent
-//    }
-
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         mainComponent = DaggerMainComponent.factory().create(this)
         mainComponent.inject(this)

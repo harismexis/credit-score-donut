@@ -8,11 +8,6 @@ import dagger.Provides
 @Module
 class ApplicationModule {
 
-//    //@Provides
-//    fun provideApplication(): Application {
-//        return application
-//    }
-
     @Provides
     fun providesContext(application: MainApplication): Context {
         return application.applicationContext
