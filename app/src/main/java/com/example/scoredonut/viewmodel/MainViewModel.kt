@@ -16,9 +16,7 @@ import io.reactivex.disposables.Disposable
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class MainViewModel @Inject constructor
     (
     var creditRepository: CreditRepository,

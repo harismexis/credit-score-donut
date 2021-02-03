@@ -15,7 +15,6 @@ import com.example.scoredonut.util.getString
 import com.example.scoredonut.util.getStringFormatted
 import com.example.scoredonut.viewmodel.MainViewModel
 import io.mockk.every
-import io.mockk.justRun
 import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import org.hamcrest.core.IsNot
@@ -44,8 +43,8 @@ class MainActivityTest {
     @Before
     fun setup() {
         mockViewModel = MockProvider.provideMockViewModel()
-        justRun { mockViewModel.bind() }
-        justRun { mockViewModel.unbind() }
+        every { mockViewModel.bind() } returns Unit
+        every { mockViewModel.unbind() } returns Unit
     }
 
     @Test
