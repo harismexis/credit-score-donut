@@ -25,17 +25,10 @@ class MainViewModel @Inject constructor
 
     private var disposables: CompositeDisposable = CompositeDisposable()
     private val TAG = MainViewModel::class.qualifiedName
-    private var jobGetCredit: Job? = null
 
     private val mCreditUiModel = MutableLiveData<CreditUiModel>()
     val creditUiModel: LiveData<CreditUiModel>
         get() = mCreditUiModel
-
-    override fun onCleared() {
-        super.onCleared()
-        jobGetCredit?.cancel()
-        jobGetCredit = null
-    }
 
     fun bind() {
         disposables = CompositeDisposable()
@@ -52,7 +45,7 @@ class MainViewModel @Inject constructor
         return connectivity.getConnectivityUpdates()
             .filter { it == ConnectivityState.CONNECTED }
             .doOnNext {
-                jobGetCredit = retrieveCreditScore()
+                retrieveCreditScore()
             }
             .doOnError {
                 Log.d(TAG, it.getErrorMessage())
