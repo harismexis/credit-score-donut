@@ -6,12 +6,10 @@ import com.example.scoredonut.model.CreditReportInfo
 import com.example.scoredonut.model.CreditResponse
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.repository.CreditRepository
-import com.example.scoredonut.testutils.MainCoroutineScopeRule
 import com.example.scoredonut.util.network.ConnectivityMonitor
 import com.example.scoredonut.util.network.ConnectivityState
 import com.jakewharton.rxrelay2.PublishRelay
 import io.reactivex.plugins.RxJavaPlugins
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.mockito.Mock
@@ -21,10 +19,6 @@ open class MainViewModelTestSetup {
 
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-    @ExperimentalCoroutinesApi
-    @get:Rule
-    val coroutineScope = MainCoroutineScopeRule()
 
     companion object {
         const val SCORE = 500
