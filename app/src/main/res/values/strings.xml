@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Credit Score Donut</string>
+    <string name="app_name">Credit Score</string>
     <string name="credit_score_header">Your credit score is</string>
     <string name="credit_score_footer">out of %1$s</string>
 </resources>

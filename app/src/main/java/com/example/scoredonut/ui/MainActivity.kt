@@ -13,6 +13,7 @@ import com.example.scoredonut.databinding.DonutViewBinding
 import com.example.scoredonut.model.CreditUiModel
 import com.example.scoredonut.viewmodel.MainViewModel
 import dagger.android.AndroidInjection
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +26,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var donutBinding: DonutViewBinding
 
     private var handler = Handler(Looper.getMainLooper())
-    private var animationThread: Thread? = null
+    private var donutThread: Thread? = null
+    private val isDonutThreadRunning: AtomicBoolean = AtomicBoolean(false)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         AndroidInjection.inject(this)
@@ -44,7 +46,7 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         viewModel.unbind()
-        animationThread?.interrupt()
+        stopDonutProgress()
     }
 
     private fun observeLiveData() {
@@ -73,18 +75,29 @@ class MainActivity : AppCompatActivity() {
         animateScore(uiModel.score)
     }
 
+    private fun stopDonutProgress() {
+        isDonutThreadRunning.set(false)
+        donutThread?.interrupt()
+    }
+
+    private fun updateDonutProgress(progress: Int) {
+        donutBinding.scoreProgressBar.progress = progress
+        donutBinding.txtCredit.text = progress.toString()
+    }
+
     private fun animateScore(userScore: Int) {
-        animationThread = Thread {
-            for (progress in 1..userScore) {
-                handler.post {
-                    donutBinding.scoreProgressBar.progress = progress
-                    donutBinding.txtCredit.text = progress.toString()
-                }
+        donutThread = Thread {
+            var progress = 0
+            isDonutThreadRunning.set(true)
+            while (isDonutThreadRunning.get() && progress <= userScore) {
+                handler.post { updateDonutProgress(progress) }
                 try {
                     Thread.sleep(5)
                 } catch (e: InterruptedException) {
+                    Thread.currentThread().interrupt()
                     e.printStackTrace()
                 }
+                progress++
             }
         }.apply { start() }
     }
